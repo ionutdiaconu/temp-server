@@ -893,9 +893,9 @@ dependencies = [
 
 [[package]]
 name = "influxdb2"
-version = "0.4.4"
+version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "46100c9f98342ad06b5ebe3f2dd2ab2e93f4a592f1d1387c4aa046a70fab4683"
+checksum = "0e9905b42e1657450f88a3e47a9323d20862a05bf1e09c58d3391ee0916b623f"
 dependencies = [
  "base64 0.13.1",
  "bytes",

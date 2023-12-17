@@ -1,5 +1,5 @@
 
-use chrono::{DateTime, FixedOffset};
+use chrono::{DateTime, FixedOffset, Utc};
 use influxdb2::{Client, FromDataPoint};
 use influxdb2::models::Query;
 use num_traits::float;
@@ -52,9 +52,11 @@ pub async fn write_flux(room: String, temp: f64) -> Result<(), Box<dyn std::erro
     let client = Client::new(host, org, token);
      
     let points = vec![
-        DataPoint::builder("measurement")
+        DataPoint::builder("home")
             .tag("room", room)
             .field("temp", temp)
+            .field("hum", 0.0)
+            .field("co", 0.0)
             .build()?
     ];
                                                              
