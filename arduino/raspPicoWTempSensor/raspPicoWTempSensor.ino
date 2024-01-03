@@ -20,10 +20,15 @@ HttpClient httpClient = HttpClient(wifiClient, "192.168.1.112", 9090);
 
 void setup() {
   Serial.begin(115200);
+  pinMode(LED_BUILTIN, OUTPUT);
+
+  indicateBoot();
+
 
   //connect to wifi
   Serial.println();
   Serial.println();
+  Serial.println("Booted!");
   Serial.print("Connecting to ");
   Serial.println(ssid);
 
@@ -38,7 +43,9 @@ void setup() {
   Serial.println("");
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+  Serial.print(WiFi.localIP());
+
+  digitalWrite(LED_BUILTIN, LOW); 
 }
 
 void loop() {
@@ -53,6 +60,8 @@ void loop() {
   String postData = "";
   String url = "/temp?room=mada&temp=" + String(temp);
   Serial.println("making POST request:" + url);
+  
+  digitalWrite(LED_BUILTIN, HIGH);
   httpClient.post(url, contentType, postData);
 
   int statusCode = httpClient.responseStatusCode();
@@ -61,9 +70,33 @@ void loop() {
   Serial.println(statusCode);
   Serial.print("Response: ");
   Serial.println(response);
-  
+
+  if(statusCode != 201){
+    Serial.print("Rebooting.... ");
+    rp2040.reboot();
+  }
+
+  delay(300);
+  digitalWrite(LED_BUILTIN, LOW); 
+
   if (wait) {
     delay(60000);  //  don't flood remote service
   }
+
+
   wait = true;
+}
+
+void indicateBoot()
+{
+  for(int i=0; i<=5; i++)
+  {
+    delay(200);
+    digitalWrite(LED_BUILTIN, LOW); 
+    delay(200);
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+
+   digitalWrite(LED_BUILTIN, LOW);
+   delay(1000);
 }
